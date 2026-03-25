@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="styles.css">
+<title>Ben 10</title>
+</head>
+
+<body>
+
+<audio id="temaMenu" src="sonidos/index.mp3" autoplay loop></audio>
+<audio id="sonidoHover" src="sonidos/Omnitrix-cambiando.mp3"></audio>
+
+<link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
+
+<h1 class="titulo">
+  <img class="logo" src="imagenes-videos/Ben-10-Logo.png" alt="BEN 10">
+  <span class="main">OMNITRIX WIELDER</span>
+</h1>
+<br>
+<br>
+<br>
+<br>
+<section>
+    <div class="menu">
+        <button class="botonMenu" onclick="window.location.href=' '">
+            <span class="bg"></span>
+            <span class="icono icono-izq"></span>
+            <span class="icono icono-der"></span>
+            <span class="text">Comenzar Aventura</span>
+        </button>
+        <button class="botonMenu" onclick="window.location.href=' '">
+            <span class="bg"></span>
+            <span class="icono icono-izq"></span>
+            <span class="icono icono-der"></span>
+            <span class="text">Seguir Aventura</span>
+        </button>
+        <button class="botonMenu" onclick="window.location.href=' '">
+            <span class="bg"></span>
+            <span class="icono icono-izq"></span>
+            <span class="icono icono-der"></span>
+            <span class="text">Controles</span>
+        </button>
+        <button class="botonMenu" onclick="window.location.href=' '">
+            <span class="bg"></span>
+            <span class="icono icono-izq"></span>
+            <span class="icono icono-der"></span>
+            <span class="text">Créditos</span>
+        </button>
+    </div>
+</section>
+<br>
+<br>
+<br>
+<br>
+<script>
+// ===== VARIABLES =====
+let indiceActual = 0;
+let puedeMover = true;
+let ultimoInput = "mouse";
+const botones = document.querySelectorAll('.botonMenu');
+const musica = document.getElementById("temaMenu");
+const sonido = document.getElementById("sonidoHover");
+const menu = document.querySelector(".menu");
+// ===== CONTROL CON MOUSE =====
+botones.forEach((btn, index) => {
+    btn.addEventListener('mouseenter', () => {
+        ultimoInput = "mouse";
+        menu.classList.remove("usando-mando");
+
+        indiceActual = index;
+        actualizarSeleccion();
+    });
+});
+
+// ===== AUDIO =====
+musica.volume = 0.5;
+sonido.volume = 1;
+
+// ===== SELECCIÓN =====
+function actualizarSeleccion() {
+    botones.forEach(b => {
+        b.classList.remove('activo');
+        b.classList.remove('girando');
+    });
+
+    const botonActual = botones[indiceActual];
+    botonActual.classList.add('activo');
+
+    const icono = botonActual.querySelector('.icono');
+
+    icono.style.animation = 'none';
+    void icono.offsetWidth;
+    icono.style.animation = '';
+
+    botonActual.classList.add('girando');
+
+    sonido.currentTime = 0;
+    sonido.play();
+}
+// ===== GAMEPAD =====
+function leerGamepad() {
+    const gamepads = navigator.getGamepads();
+    const gp = gamepads[0];
+
+    if (!gp) return;
+
+    let ejeY = gp.axes[1];
+
+    if (puedeMover) {
+        if (ejeY > 0.5) {
+            indiceActual++;
+            if (indiceActual >= botones.length) indiceActual = 0;
+            actualizarSeleccion();
+            puedeMover = false;
+            setTimeout(() => puedeMover = true, 200);
+        }
+
+        if (ejeY < -0.5) {
+            indiceActual--;
+            if (indiceActual < 0) indiceActual = botones.length - 1;
+            actualizarSeleccion();
+            puedeMover = false;
+            setTimeout(() => puedeMover = true, 200);
+        }
+    }
+
+    // botón A / X
+    if (gp.buttons[0].pressed) {
+        botones[indiceActual].click();
+    }
+    if (Math.abs(ejeY) > 0.5) {
+    ultimoInput = "mando";
+    menu.classList.add("usando-mando");
+}
+}
+
+// ===== LOOP =====
+function loop() {
+    leerGamepad();
+    requestAnimationFrame(loop);
+}
+
+loop();
+</script>
+
+</body>
+</html>

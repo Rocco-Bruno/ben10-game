@@ -1,0 +1,236 @@
+/* ===== ANIMACIONES ===== */
+@keyframes glow {
+    0% {
+        text-shadow:
+            0 0 5px #A8E61D,
+            0 0 10px #A8E61D,
+            0 0 20px #00ff88;
+    }
+    100% {
+        text-shadow:
+            0 0 10px #A8E61D,
+            0 0 20px #00ff88,
+            0 0 40px #00ff88,
+            0 0 80px #00ff88;
+    }
+}
+
+@keyframes girarOmnitrix {
+    0% {
+        transform: translateY(-50%) rotate(0deg);
+    }
+    100% {
+        transform: translateY(-50%) rotate(180deg);
+    }
+}
+
+/* ===== BODY ===== */
+body {
+    display: flex;
+    flex-direction: column; 
+    justify-content: center;
+    align-items: center;
+    height: 100vh; 
+    margin: 0;
+    background: #000000;
+}
+
+/* ===== TITULO ===== */
+.titulo {
+    font-family: 'Anton', sans-serif;
+    text-align: center;
+    margin: 0;
+
+    display: inline-block; /* hace que todo sea una sola pieza */
+    cursor: pointer;
+
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+/* IMAGEN */
+.logo{
+    width: 400px;
+    height: 200px;
+
+    display: block;       /* elimina el espacio raro debajo */
+    margin: 0 auto;       /* centra */
+}
+
+/* TEXTO */
+.titulo .main {
+    display: block;
+    font-size: 40px;
+    margin: 0;            /* clave: elimina separación */
+
+    color: white;
+    transform: skew(-10deg);
+
+    text-shadow:
+        2px 2px 0px #0a1f00,
+        0 0 8px #1aff00,
+        0 0 15px #0f5c00; /* verde base más oscuro */
+}
+
+/* ESTADO NORMAL (sombra verde suave en todo el bloque) */
+.titulo {
+    filter: drop-shadow(0 0 6px #0f5c00)
+            drop-shadow(0 0 12px #0a3d00);
+}
+
+/* HOVER */
+.titulo:hover {
+    transform: scale(1.08);
+
+    filter: drop-shadow(0 0 10px #1aff00)
+            drop-shadow(0 0 25px #1aff00)
+            drop-shadow(0 0 40px #00ff00);
+}
+
+/* ===== MENU ===== */
+.menu {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* ===== BOTONES ===== */
+.botonMenu {
+    --c1: #222222; 
+    --c2: #A8E61D; 
+
+    position: relative;
+    padding: 10px 30px;
+    font-size: 20px;
+
+    background-color: transparent;
+    border: 3px solid var(--c2);
+    border-radius: 5px;
+
+    cursor: pointer;
+    overflow: visible;
+
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/*FONDO ANIMADO DE BOTONES*/
+.botonMenu .bg {
+    position: absolute;
+    inset: 0;
+    overflow: hidden; 
+    z-index: 0;
+}
+
+.botonMenu .bg::before,
+.botonMenu .bg::after {
+    content: "";
+    position: absolute;
+    width: 120%;
+    aspect-ratio: 1/1;
+    background-color: var(--c2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    transition: transform 0.5s;
+}
+
+.botonMenu .bg::before {
+    top: 100%;
+    left: 0;
+}
+
+.botonMenu .bg::after {
+    top: 0;
+    left: 100%;
+}
+
+/*TEXTO DE BOTONES*/
+.botonMenu .text {
+    font-weight: bold;
+    color: var(--c2);
+    position: relative;
+    z-index: 1;
+    transition: 0.3s;
+}
+
+/*ESTADO ACTIVO*/
+.botonMenu.activo {
+    transform: scale(1.1);
+    box-shadow: 0 0 20px #A8E61D;
+    background-color: var(--c2);
+}
+
+.botonMenu.activo .bg::before,
+.botonMenu.activo .bg::after {
+    transform: translate(-50%, -50%) scale(1.5);
+}
+
+.botonMenu.activo .text {
+    color: var(--c1);
+}
+
+/*CLICK*/
+.botonMenu:active {
+    transform: scale(0.95);
+}
+
+/*ÍCONOS OMNITRIX*/
+.botonMenu .icono {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 35px;/*tamaño*/
+    height: 35px;
+    background-image: url('imagenes-videos/omnitrix.png');/*raíz*/
+    background-size: cover;
+    background-repeat: no-repeat;
+    opacity: 0;
+    transition: 0.3s;/*tiempo aparición*/
+    z-index: 2;
+}
+/*izquierda*/
+.icono-izq {
+    left: -50px;
+}
+/*derecha*/
+.icono-der {
+    right: -50px;
+}
+
+/* aparecen cuando está activo */
+.botonMenu.activo .icono {
+    opacity: 1;
+}
+
+/* giro */
+.botonMenu.girando .icono {
+    animation: girarOmnitrix 0.3s ease;
+}
+
+/*DESACTIVAR HOVER CUANDO HAY JOYSTICK*/
+.menu.usando-mando .botonMenu:hover {
+    transform: none;
+    background-color: transparent;
+}
+
+.menu.usando-mando .botonMenu:hover .bg::before,
+.menu.usando-mando .botonMenu:hover .bg::after {
+    transform: translate(-50%, -50%) scale(0);
+}
+
+.menu.usando-mando .botonMenu:hover .text {
+    color: var(--c2);
+}
+
+/*ELIMINO SOBREPOSICIÓN DE HOVERS*/
+.botonMenu.activo:hover {
+    transform: scale(1.1);
+    background-color: var(--c2);
+}
+
+.botonMenu.activo:hover .text {
+    color: var(--c1);
+}
+
+.botonMenu.activo:hover .bg::before,
+.botonMenu.activo:hover .bg::after {
+    transform: translate(-50%, -50%) scale(1.5);
+}
