@@ -1,0 +1,22 @@
+#game {
+    position: relative;
+    width: 640px;
+    height: 360px;
+    overflow: hidden;
+    border: 2px solid black;
+}
+
+#mapa {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#player {
+    width: 48px;
+    height: 48px;
+    background: red;
+    position: absolute;
+    top: 150px;
+    left: 100px;
+}
